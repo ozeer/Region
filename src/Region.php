@@ -1,5 +1,7 @@
 <?php
 
+namespace Hhz\Region;
+
 Class Region
 {
 	private const REGION_CONFIG_FILE = "region.json";
