@@ -11,6 +11,7 @@ class Region
 	// 地区代码分隔符
 	private const REGION_CODE_SEPARATOR = ',';
 	public static array $regionData = [];
+	public static array $mapData = [];
 	// 直辖市
 	private static array $municipality = ['重庆', '上海', '天津', '北京'];
 	private static array $directCityCodes = ['110000', '500000', '310000', '120000'];
