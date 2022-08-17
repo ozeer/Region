@@ -2,28 +2,33 @@
 
 namespace Hhz\Region;
 
-Class Region
+use Exception;
+
+class Region
 {
 	private const REGION_CONFIG_FILE = "region.json";
 	private const MAP_FILE = "map.json";
-
-	public static array $regionData = [];
-	public static array $mapData = [];
-
 	// 地区代码分隔符
 	private const REGION_CODE_SEPARATOR = ',';
-
-	private static array $municipality = ['重庆', '上海', '天津', '北京'];
-
+	public static array $regionData = [];
 	// 直辖市
+	private static array $municipality = ['重庆', '上海', '天津', '北京'];
 	private static array $directCityCodes = ['110000', '500000', '310000', '120000'];
-	// 一国两制
 	private static array $directAreaCodes = ['810000', '820000'];
-	public static array $specialCites = ['110000', '500000', '310000', '120000', '810000', '820000'];
+
+	/**
+	 * 获取所有区域信息
+	 * @return array
+	 * @throws Exception
+	 */
+	public static function getAllRegion(): array
+	{
+		self::getRegionData();
+		return self::$regionData;
+	}
 
 	/**
 	 * 获取区域数据
-	 *
 	 * @throws Exception
 	 */
 	protected static function getRegionData()
@@ -39,37 +44,7 @@ Class Region
 	}
 
 	/**
-	 * 获取所有区域信息
-	 * @return array
-	 * @throws Exception
-	 */
-	public static function getAllRegion(): array
-	{
-		self::getRegionData();
-		return self::$regionData;
-	}
-
-	/**
-	 * 获取map数据
-	 *
-	 * @throws Exception
-	 */
-	protected static function getMapData(): void
-	{
-		if (empty(self::$mapData)) {
-			$file = __DIR__ . "/" . self::MAP_FILE;
-			if (!file_exists($file)) {
-				throw new Exception('地区映射文件不存在');
-			}
-
-			$mapConfig = file_get_contents($file);
-			self::$mapData = json_decode($mapConfig, true);
-		}
-	}
-
-	/**
 	 * 判断某个地区是否为直辖市
-	 *
 	 * @param $region_name
 	 * @return bool
 	 */
@@ -89,7 +64,7 @@ Class Region
 		if ((string)$code === "999") {
 			return $map["999"];
 		}
-		//不要调换顺序
+		// 不要调换顺序
 		if (strlen($code) < 6) {
 			return $map['000'] . ',' . $map[$code];
 		}
@@ -124,8 +99,24 @@ Class Region
 	}
 
 	/**
+	 * 获取map数据
+	 * @throws Exception
+	 */
+	protected static function getMapData(): void
+	{
+		if (empty(self::$mapData)) {
+			$file = __DIR__ . "/" . self::MAP_FILE;
+			if (!file_exists($file)) {
+				throw new Exception('地区映射文件不存在');
+			}
+
+			$mapConfig = file_get_contents($file);
+			self::$mapData = json_decode($mapConfig, true);
+		}
+	}
+
+	/**
 	 * 根据code码获取城市名称
-	 *
 	 * @param $code
 	 * @return string
 	 * @throws Exception
